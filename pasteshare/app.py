@@ -12,4 +12,6 @@ _settings = {
 
 application = tornado.web.Application([
     ("/", index.IndexHandler)
+    (r"/img/(.*)", web.StaticFileHandler, {"path": "img"}),
+    (r"/css/(.*)", web.StaticFileHandler, {"path": "css"}),
     ],**_settings)
