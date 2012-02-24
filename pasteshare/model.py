@@ -23,7 +23,8 @@ class Snippet(object):
     def _get_unused_id(cls):
         """ gets an unused id """
 	cli = data.get_client()
-	cli.incr("counter:snippet")
+	_id = yield cli.incr("counter:snippet")
+	return _id
 
     @classmetod
     def new(cls,title,content,language,author=0,creation):
