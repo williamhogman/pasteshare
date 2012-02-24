@@ -27,7 +27,8 @@ class Snippet(object):
 	return _id
 
     @classmetod
-    def new(cls,title,content,language,author=0,creation):
+    def new(cls,title,content,language,author=0):
         """ Creates a new snippet """
         creation = int(time.time())
+        _id = _get_unused_id()
         return cls(_id,title,content,language,author,creation)
