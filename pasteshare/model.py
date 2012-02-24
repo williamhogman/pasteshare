@@ -1,7 +1,7 @@
 import time
 import pasteshare.data as data
 
-from brukva.adisp import process
+from brukva.adisp import process,async
 
 class Snippet(object):
 
@@ -18,15 +18,15 @@ class Snippet(object):
             lastedit = creation
             
         
-    @classmetod
-    @process
-    def _get_unused_id(cls):
+    @staticmethod
+    @async
+    def _get_unused_id(callback):
         """ gets an unused id """
 	cli = data.get_client()
-	_id = yield cli.incr("counter:snippet")
-	return _id
+	pcli.incr("counter:snippet",callback)
 
-    @classmetod
+
+    @classmethod
     def new(cls,title,content,language,author=0):
         """ Creates a new snippet """
         creation = int(time.time())
