@@ -23,7 +23,7 @@ class Snippet(object):
     def _get_unused_id(callback):
         """ gets an unused id """
 	cli = data.get_client()
-	pcli.incr("counter:snippet",callback)
+	cli.incr("counter:snippet",callback)
 
 
     @classmethod
