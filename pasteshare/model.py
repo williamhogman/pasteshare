@@ -1,4 +1,7 @@
 import time
+import pasteshare.data as data
+
+from brukva.adisp import process
 
 class Snippet(object):
 
@@ -16,8 +19,11 @@ class Snippet(object):
             
         
     @classmetod
+    @process
     def _get_unused_id(cls):
         """ gets an unused id """
+	cli = data.get_client()
+	cli.incr("counter:snippet")
 
     @classmetod
     def new(cls,title,content,language,author=0,creation):
