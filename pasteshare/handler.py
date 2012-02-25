@@ -40,6 +40,12 @@ class Handler(web.RequestHandler):
     """
     Base class for handlers in pasteshare
     """
+    
+    def construct_url(self,*path):
+        """ constructs an url matching the current host and protocol """
+        base = self.request.protocol+"://"+self.request.host+"/"
+        return base+"/".join(path)
+
 
 class RESTHandler(web.RequestHandler):
     """ Base handler for REST pages """
@@ -99,10 +105,6 @@ class RESTHandler(web.RequestHandler):
             self.write(json.dumps(data))
         self.finish()
             
-    def construct_url(self,*path):
-        """ constructs an url matching the current host and protocol """
-        base = self.request.protocol+"://"+self.request.host+"/"
-        return base+"/".join(path)
     def parse_body(self):
         api_ver,tp = _parse_mimetype(self.request.headers["Content-Type"])
         
