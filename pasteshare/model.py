@@ -36,6 +36,10 @@ class Snippet(object):
     def url(self):
         return "pastes/{}".format(self.id)
 
+    @property
+    def anonymous(self):
+        return self.id == 0
+
     @async
     @process
     def save(self,callback):
