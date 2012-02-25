@@ -41,10 +41,24 @@ class PastesHandler(handler.RESTHandler):
 class PasteHandler(handler.RESTHandler):
     """ Gets a paste by id"""
 
+    @async
+    @process
+    def retrive(self,pid,callback):
+        callback((yield model.Snippet.by_id(pid)))
+
+    @web.asynchronous
+    @process
+    def head(self,pid):
+        m = yield self.retrive(pid)
+        
+        # We can't cache responses to post because 
+        self.enable_caching(mod=m.lastedit)
+        self.finish()
+        
     @web.asynchronous
     @process
     def get(self,pid):
-        m = yield model.Snippet.by_id(pid)
+        m = yield self.retrive(pid)
 
         if self.has_cached(m.lastedit):
             self.set_status(304)
