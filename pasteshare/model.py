@@ -137,5 +137,4 @@ class SnippetsCollection(object):
         for future in futures:
             out.append((yield future))
             
-        print(out)
         callback(cls(out))
