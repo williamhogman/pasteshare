@@ -25,6 +25,12 @@ def _parse_mimetype(mimetype):
             tp = "json"
 
         return (version,tp)
+    elif mimetype == "application/json":
+        return (-1,"json")
+    elif mimetype == "application/x-www-form-urlencoded":
+        return (-1,"urlencoded")
+    elif mimetype.startswith("multipart/form-data"):
+        return (-1,"form-data")
     else:
         return False
             
