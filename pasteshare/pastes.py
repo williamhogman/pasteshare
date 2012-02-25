@@ -21,6 +21,20 @@ class PastesHandler(handler.RESTHandler):
 
         self.write_data("pastes.html",snippets=pastes)
 
+
+    @web.asynchronous
+    @process
+    def post(self):
+        s = model.Snippet.new(**self.data)
+        print("about to save")
+        yield s.save()
+        # Created
+        self.set_status(201)
+        self.set_header("Location",self.construct_url(s.url))
+        self.write_data("paste.html",snippet=s)
+
+        
+
 class PasteHandler(handler.RESTHandler):
     """ Gets a paste by id"""
 
