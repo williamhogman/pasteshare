@@ -46,6 +46,17 @@ class Handler(web.RequestHandler):
         base = self.request.protocol+"://"+self.request.host+"/"
         return base+"/".join(path)
 
+    @property
+    def autenticated(self):
+        """ Returns true if the request is authenticated """
+        # We don't support authentication yet
+        return False
+
+    @property
+    def user(self):
+        """ Gets the user that we are acting on behalf of """
+        pass
+
 
 class RESTHandler(web.RequestHandler):
     """ Base handler for REST pages """
