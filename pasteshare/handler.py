@@ -45,12 +45,26 @@ class RESTHandler(web.RequestHandler):
 
     def write_data(self,template=None,**data):
         """ writes or renders data depending on if this is an api call """
-        if template is None:
-            template = self.default_template
+            
         if not self.api_call:
+            if template is None:
+                template = self.default_template
+                
             self.render(template,**data)
-        elif self.api_type is "json":
+            return
+
+        def _parsed():
+            for k,v in data.iteritems():
+                if hasattr(v,"as_type"):
+                    yield (k,v.as_type(self.api_type))
+                else:
+                    yield (k,v)
+
+        data = dict(_parsed())
+        
+        if self.api_type is "json":
             self.write(json.dumps(data))
+        self.finish()
             
         
     def prepare(self):
