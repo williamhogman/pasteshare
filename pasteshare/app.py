@@ -12,6 +12,7 @@ _settings = {
 application = web.Application([
     ("/", index.IndexHandler),
     ("/pastes/([0-9]+)",pastes.PasteHandler),
+    ("/pastes/",pastes.PastesHandler),
     (r"/img/(.*)", web.StaticFileHandler, {"path": "img"}),
     (r"/css/(.*)", web.StaticFileHandler, {"path": "css"})
     ],**_settings)

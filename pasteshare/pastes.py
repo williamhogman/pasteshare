@@ -7,9 +7,19 @@ import pasteshare.model as model
 
 
 class PastesHandler(handler.RESTHandler):
+    
+    per_page = 20
 
+
+    @web.asynchronous
+    @process
     def get(self,page=0):
-        pass
+        start = page*self.per_page
+        stop = start + self.per_page
+        pastes = yield model.SnippetsCollection.get_recent_pastes(start=start,
+                                                                  stop=stop)
+
+        self.write_data("pastes.html",snippets=pastes)
 
 class PasteHandler(handler.RESTHandler):
     """ Gets a paste by id"""
