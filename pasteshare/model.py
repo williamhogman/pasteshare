@@ -75,12 +75,14 @@ class Snippet(object):
                         
     @staticmethod
     @async
-    def _get_unused_id(callback):
+    @process
+    def _get_unused_id(callback=None):
         """ gets an unused id """
+        print("guid")
 	cli = data.get_client()
-	yield cli.incr("counter:snippet",callback)
+        callback((yield cli.async.incr("counter:snippet")))
 
-
+        
     @classmethod
     @async
     @process
