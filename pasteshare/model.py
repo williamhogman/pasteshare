@@ -46,13 +46,20 @@ class Snippet(object):
         key = self._key
         cli = data.get_client()
 
-        pipe = cli.async.pipeline()
+        pipe = cli.pipeline()
         
-        pipe.hmset(self._key,_field_dict())
+        pipe.hmset(self._key,self._field_dict())
+        
         if creation: # don't add us every save
             pipe.lpush("pastes",self.id) #global pastes
-            pipe.lpush("user:{}:pastes".format(self.author),self.author) # user posts
-        yield pipe.execute()
+            # user posts
+            pipe.lpush("user:{}:pastes".format(self.author),self.author)
+            
+        def cb(data):
+            callback(True)
+
+        pipe.execute([cb])
+
 
         
 
