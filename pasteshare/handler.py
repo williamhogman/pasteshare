@@ -47,7 +47,7 @@ class Handler(web.RequestHandler):
         return base+"/".join(path)
 
     @property
-    def autenticated(self):
+    def authenticated(self):
         """ Returns true if the request is authenticated """
         # We don't support authentication yet
         return False
