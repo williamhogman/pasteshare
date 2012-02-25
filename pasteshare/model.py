@@ -32,17 +32,23 @@ class Snippet(object):
     @process
     def save(self):
         if self.id == -1:
+            creation  = True
             self.id = yield self._get_unused_id()
+        else:
+            creation = False
+            
         key = self._key
         cli = data.get_client()
 
         pipe = cli.async.pipeline()
         
         pipe.hmset(self._key,_field_dict())
-        pipe.lpush("pastes",self.id) #global pastes
-        pipe.lpush("user:{}:pastes".format(self.author),self.author) # user posts
+        if creation: # don't add us every save
+            pipe.lpush("pastes",self.id) #global pastes
+            pipe.lpush("user:{}:pastes".format(self.author),self.author) # user posts
         yield pipe.execute()
 
+        
 
     def _field_dict(self):
         values = [getattr(self,field) for field in self.fields]
