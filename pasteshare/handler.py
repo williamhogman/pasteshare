@@ -53,7 +53,7 @@ class RESTHandler(web.RequestHandler):
         if "If-Modified-Since" in self.request.headers:
             hdr = self.request.headers["If-Modified-Since"]
             theirmod =time.mktime(parsedate(hdr))
-            return theirmod < moddate
+            return theirmod < ourmod
         elif "If-None-Match" in self.request.headers and etag is not None:
             return self.request.headers["ETag"] == etag
 
