@@ -34,7 +34,7 @@ class PastesHandler(handler.RESTHandler):
             self.set_header("Location",self.construct_url(s.url))
             self.write_data("paste.html",snippet=s)
         else:
-            self.write_error(500)
+            self.send_error(500)
 
         
 
