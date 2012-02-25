@@ -32,11 +32,11 @@ class PastesHandler(handler.RESTHandler):
             
             # 401 if login is required
             if not self.authenticated:
-                self.send_error(401)
-                
+		raise web.HTTPError(401,"You need to login before as you post as you")
             # 403 posting as the wrong user is forbidden
             elif self.user.id != s.id:
-                self.send_error(403)
+		raise web.HTTPError(403,"You may not post as someone else")
+
                 
         saved = yield s.save()
 
@@ -46,7 +46,7 @@ class PastesHandler(handler.RESTHandler):
             self.set_header("Location",self.construct_url(s.url))
             self.write_data("paste.html",snippet=s)
         else:
-            self.send_error(500)
+	     raise web.HTTPError(500,"Post failed")
 
         
 
