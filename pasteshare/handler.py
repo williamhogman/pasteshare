@@ -93,9 +93,34 @@ class RESTHandler(web.RequestHandler):
             self.write(json.dumps(data))
         self.finish()
             
+    def construct_url(self,*path):
+        """ constructs an url matching the current host and protocol """
+        base = self.request.protocol+"://"+self.request.host+"/"
+        return base+"/".join(path)
+    def parse_body(self):
+        api_ver,tp = _parse_mimetype(self.request.headers["Content-Type"])
         
+        # The parsing has already been done
+        if tp == "urlencoded" or tp == "form-data":
+            args = list()
+            for (k,v) in self.request.arguments.iteritems():
+                args.append((k,v[0]))
+            self.data = dict(args)
+        elif tp == "json":
+            try:
+                self.data = json.loads(self.request.body)
+            except ValueError as ex:
+                # Malformed json, so we send 400
+                self.send_error(400,exc_info=ex)
+            
+
+
+    body_methods = ("PUT","POST")
     def prepare(self):
         self.parse_accept()
+        
+        if self.request.method in self.body_methods:
+            self.parse_body()
         
         
     
