@@ -111,8 +111,9 @@ class RESTHandler(Handler):
                     yield (k,v)
 
         data = dict(_parsed())
-        
-        if self.api_type is "json":
+
+
+        if self.api_type == "json":
             self.write(json.dumps(data))
         self.finish()
             
