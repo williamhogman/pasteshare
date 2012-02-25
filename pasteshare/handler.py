@@ -1,8 +1,13 @@
 """
 Put http handlers here
 """
-import tornado.web as web
+import time
+from email.utils import parsedate
+from wsgiref.handlers import format_date_time
 import json
+
+import tornado.web as web
+
 
 _api_type = "application/vnd.pasteshare"
 def _parse_mimetype(mimetype):
@@ -38,11 +43,33 @@ class RESTHandler(web.RequestHandler):
         if parsed is False:
             self.api_call = False
         else:
-            print(parsed)
             self.api_call = True
             self.api_version = parsed[0]
             self.api_type = parsed[1]
 
+
+    def has_cached(self,ourmod,etag=None):
+        """ Determines if the client cache is valid """
+        if "If-Modified-Since" in self.request.headers:
+            hdr = self.request.headers["If-Modified-Since"]
+            theirmod =time.mktime(parsedate(hdr))
+            return theirmod < moddate
+        elif "If-None-Match" in self.request.headers and etag is not None:
+            return self.request.headers["ETag"] == etag
+
+    def enable_caching(self,cache_control="Public",mod=None,etag=None):
+        if cache_control is not None:
+            self.set_header("Cache-Control",cache_control)
+
+        if mod is not None:
+            self.set_header("Last-Modified",format_date_time(float(mod)))
+
+        if etag is not None:
+            self.set_header("ETag",etag)
+            
+        
+            
+    
     def write_data(self,template=None,**data):
         """ writes or renders data depending on if this is an api call """
             

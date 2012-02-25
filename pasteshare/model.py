@@ -55,14 +55,18 @@ class Snippet(object):
         data.update({"id": self.id})
         return data
         
-         
+    @process
+    def count_view(self):
+        """ Counts a pageview for this snippet """
+        cli = data.get_client()
+        yield cli.async.hincrby(self._key,"views",1)
                         
     @staticmethod
     @async
     def _get_unused_id(callback):
         """ gets an unused id """
 	cli = data.get_client()
-	cli.incr("counter:snippet",callback)
+	yield cli.incr("counter:snippet",callback)
 
 
     @classmethod

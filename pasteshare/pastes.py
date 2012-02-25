@@ -1,5 +1,4 @@
 from brukva.adisp import process,async
-from wsgiref.handlers import format_date_time
 import tornado.web as web
 
 import pasteshare.handler as handler
@@ -19,6 +18,13 @@ class PasteHandler(handler.RESTHandler):
     @process
     def get(self,pid):
         m = yield model.Snippet.by_id(pid)
-        self.set_header("Last-Modified",format_date_time(float(m.lastedit)))
-        self.write_data("paste.html",snippet=m)
-        
+
+        if self.has_cached(m.lastedit):
+            self.set_status(304)
+            self.finish()
+        else:
+            self.enable_caching(mod=m.lastedit)
+            self.write_data("paste.html",snippet=m)
+
+            
+        m.count_view()
