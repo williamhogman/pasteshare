@@ -31,6 +31,10 @@ class Snippet(object):
     def _key(self):
         return "Snippet:{}".format(self.id)
         
+    @property
+    def url(self):
+        return "pastes/{}".format(self.id)
+
     @process
     def save(self):
         if self.id == -1:
