@@ -58,7 +58,7 @@ class Handler(web.RequestHandler):
         pass
 
 
-class RESTHandler(web.RequestHandler):
+class RESTHandler(Handler):
     """ Base handler for REST pages """
     def parse_accept(self):
         accept = self.request.headers["Accept"]
