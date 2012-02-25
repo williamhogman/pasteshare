@@ -26,17 +26,19 @@ class Snippet(object):
     fields = ["title","content","language",
               "creation","lastedit","views",
               "author"]
+
     
     @property
     def _key(self):
         return "Snippet:{}".format(self.id)
-        
+
     @property
     def url(self):
         return "pastes/{}".format(self.id)
 
+    @async
     @process
-    def save(self):
+    def save(self,callback):
         if self.id == -1:
             creation  = True
             self.id = yield self._get_unused_id()
@@ -61,7 +63,7 @@ class Snippet(object):
         pipe.execute([cb])
 
 
-        
+
 
     def _field_dict(self):
         values = [getattr(self,field) for field in self.fields]
