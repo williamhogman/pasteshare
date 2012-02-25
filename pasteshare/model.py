@@ -61,10 +61,6 @@ class Snippet(object):
             callback(True)
 
         pipe.execute([cb])
-
-
-
-
     def _field_dict(self):
         values = [getattr(self,field) for field in self.fields]
         return dict(zip(self.fields,values))
@@ -87,7 +83,6 @@ class Snippet(object):
     @process
     def _get_unused_id(callback=None):
         """ gets an unused id """
-        print("guid")
 	cli = data.get_client()
         callback((yield cli.async.incr("counter:snippet")))
 
