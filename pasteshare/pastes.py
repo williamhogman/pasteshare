@@ -26,12 +26,15 @@ class PastesHandler(handler.RESTHandler):
     @process
     def post(self):
         s = model.Snippet.new(**self.data)
-        print("about to save")
-        yield s.save()
+        saved = yield s.save()
+
         # Created
-        self.set_status(201)
-        self.set_header("Location",self.construct_url(s.url))
-        self.write_data("paste.html",snippet=s)
+        if saved:
+            self.set_status(201)
+            self.set_header("Location",self.construct_url(s.url))
+            self.write_data("paste.html",snippet=s)
+        else:
+            self.write_error(500)
 
         
 
