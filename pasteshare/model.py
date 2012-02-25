@@ -85,9 +85,41 @@ class Snippet(object):
         fields["_id"] = _id
         callback(cls(**fields))
 
-        
     @classmethod
     def new(cls,title,content,language,author=0):
         """ Creates a new snippet """
         creation = int(time.time())
         return cls(title,content,language,author,creation)
+
+class SnippetsCollection(object):
+    item_class = Snippet
+
+    def __init__(self,items):
+        self.items = items
+
+    def as_type(self,datatype):
+        items = list([item.as_type(datatype) for item in self.items])
+        return items
+
+    @classmethod
+    @async
+    @process
+    def get_recent_pastes(cls,stop,start=0,callback=None):
+        cli = data.get_client()
+        ids = map(int,(yield cli.async.lrange("pastes",start,stop)))
+        callback((yield cls.by_ids(ids)))
+
+    @classmethod
+    @async
+    @process
+    def by_ids(cls,ids,callback=None):
+        # start up all the requests
+        futures = [cls.item_class.by_id(_id) for _id in ids]
+        
+        out = list()
+
+        for future in futures:
+            out.append((yield future))
+            
+        print(out)
+        callback(cls(out))
