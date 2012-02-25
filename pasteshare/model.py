@@ -17,6 +17,8 @@ class Snippet(object):
         
         if lastedit is None:
             self.lastedit = creation
+        else:
+            self.lastedit = lastedit
 
         self.author = author
 
