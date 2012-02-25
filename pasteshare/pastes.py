@@ -26,6 +26,18 @@ class PastesHandler(handler.RESTHandler):
     @process
     def post(self):
         s = model.Snippet.new(**self.data)
+
+        # Everyone way post as anon
+        if not s.anonymous:
+            
+            # 401 if login is required
+            if not self.authenticated:
+                self.send_error(401)
+                
+            # 403 posting as the wrong user is forbidden
+            elif self.user.id != s.id:
+                self.send_error(403)
+                
         saved = yield s.save()
 
         # Created
